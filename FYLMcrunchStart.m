@@ -88,6 +88,7 @@ if exist(outfold) ~=7
 end
 
 outfile = [pwd,'/',outfold,'/','FOV_',num2str(FOV)];
+clear('outfold');
 save(outfile);
 outstruct = outfile;%load(outfile);
 

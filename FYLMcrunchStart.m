@@ -10,7 +10,7 @@
 %%% times are all relative to beginning of experiment
 %%% fluorescence data is alphabetical by name in Elements
 
-function outstruct = FYLMcrunchStart(FOV,fluorescence)
+function outstruct = FYLMcrunchStart(outfold,FOV,fluorescence)
 % if ~isstr(expdate)
 %     error('expdate must be a text string')
 % end
@@ -34,8 +34,8 @@ else
 end
 
 for ct = 1:CTper
-    
-    filename = [num2str(FOV), '_', num2str(ct), '.txt'];
+    loadpath = [pwd,'/output/'];
+    filename = [loadpath,num2str(FOV), '_', num2str(ct), '.txt'];
     fylm = cell2mat(textscan(fopen(filename),fmt));
 
     t(:,ct) = fylm(:,1);    % time of each frame
@@ -83,7 +83,11 @@ for di = 1:CTper % Cleanup of raw data
     dvln(1:ndv(di),di) = d(dlocs,di);
 end
 
-outfile = ['FOV_',num2str(FOV)];
+if exist(outfold) ~=7
+    mkdir(outfold);
+end
+
+outfile = [pwd,'/',outfold,'/','FOV_',num2str(FOV)];
 save(outfile);
 outstruct = outfile;%load(outfile);
 

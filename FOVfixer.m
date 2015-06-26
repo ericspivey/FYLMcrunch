@@ -1,7 +1,7 @@
-function funout = FOVfixer(FOV,varargin)
+function funout = FOVfixer(outfold,FOV,varargin)
 % Allows user to modify the automatically-selected cell division points
 
-if nargin >1
+if nargin >2
     tpmx = varargin{1};
     tpidx = nan(1,tpmx); % blank time period index
     tptm = tpidx; % blank time period times
@@ -12,8 +12,11 @@ if nargin >1
         tptm(j) = tstmp(end,2);
     end
 end
-outfile = ['FOV_',num2str(FOV)];
 
+loadpath = [pwd,'/'];
+fate = load([loadpath,'summary/final_state.txt']);
+celfat = fate(FOV,:);
+outfile = [loadpath,outfold,'/','FOV_',num2str(FOV)];
 load(outfile);
 mpkd = 40; % minimum peak distance index separation (~80 minutes)
 rfin = (mpkd.*2)./60; % minimum division interval time in hours (80 minutes)
@@ -22,7 +25,7 @@ i = 1;
 while ((i>0)&&(i<29))
 %plot(t(:,i),d(:,i),'ok',dvtm(:,i),dvln(:,i),'r.',t(:,i),fli(:,2.*(i-1)+1).*500,'y',t(:,i),fli(:,2.*(i)).*500,'m')
 plot(t(:,i),d(:,i),'ok',dvtm(:,i),dvln(:,i),'r.')
-if nargin >1
+if nargin >2
     hold on
     stem(tptm./3600,50.*ones(tpmx,1),'g')
     hold off
@@ -44,7 +47,7 @@ rectangle('Position',[boxx-boxw,boxy-boxh-boxh,boxw,boxh])
 text(boxx-boxw/1.5,boxy-boxh-boxh/2,'Add')
 rectangle('Position',[boxx-boxw-boxw,boxy-boxh-boxh,boxw,boxh])
 text(boxx-boxw-boxw/1.5,boxy-boxh-boxh/2,'Del')
-text(boxx-(4*boxw),boxy-boxh-boxh/2,'Divisions')
+text(boxx-(4*boxw),boxy-boxh-boxh/2,['Fate: ',num2str(celfat(i))])
 
 [PNx,PNy] = ginput(1);
 if ((PNx>(boxx-boxw))&&(PNy>(boxy-boxh)))
@@ -91,10 +94,13 @@ else
     i = i-1;
 end % if loop
 
-end % while loop
-
 save(outfile);
 funout = outfile;%load(outfile);
+
+end % while loop
+
+% save(outfile);
+% funout = outfile;%load(outfile);
 
 end % function
 

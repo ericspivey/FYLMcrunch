@@ -36,8 +36,8 @@ end
 for ct = 1:CTper
     loadpath = [pwd,'/output/'];
     filename = [loadpath,num2str(FOV), '_', num2str(ct), '.txt'];
-    fylm = cell2mat(textscan(fopen(filename),fmt));
-
+    %fylm = cell2mat(textscan(fopen(filename),fmt));
+fylm = load(filename);
     t(:,ct) = fylm(:,1);    % time of each frame
     d(:,ct) = fylm(:,2);    % pixel length of cell in each frame
     if fluorescence>0       
@@ -83,7 +83,7 @@ for di = 1:CTper % Cleanup of raw data
     dvln(1:ndv(di),di) = d(dlocs,di);
 end
 
-if exist(outfold) ~=7
+if exist([pwd,'/',outfold],'dir') ~=7
     mkdir(outfold);
 end
 

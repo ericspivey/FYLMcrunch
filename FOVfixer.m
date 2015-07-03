@@ -6,8 +6,9 @@ if nargin >2
     tpidx = nan(1,tpmx); % blank time period index
     tptm = tpidx; % blank time period times
     for j = 1:tpmx
-        filename = ['tp',num2str(j),'-fov',num2str(FOV-1), '.txt'];
-        tstmp = cell2mat(textscan(fopen(filename),'%f%f'));
+        filename = [pwd,'/timestamp/','tp',num2str(j),'-fov',num2str(FOV-1), '.txt'];
+        %tstmp = cell2mat(textscan(fopen(filename),'%f%f'));
+        tstmp = load(filename);
         tpidx(j) = tstmp(end,1);
         tptm(j) = tstmp(end,2);
     end
@@ -16,8 +17,8 @@ end
 loadpath = [pwd,'/'];
 fate = load([loadpath,'summary/final_state.txt']);
 celfat = fate(FOV,:);
-outfile = [loadpath,outfold,'/','FOV_',num2str(FOV)];
-load(outfile);
+inoutfile = [loadpath,outfold,'/','FOV_',num2str(FOV)];
+load(inoutfile);
 mpkd = 40; % minimum peak distance index separation (~80 minutes)
 rfin = (mpkd.*2)./60; % minimum division interval time in hours (80 minutes)
 dvrw = size(dvtm,1);%round(max(max(t))./rfin); % rows of matrix for recording divisions
@@ -94,8 +95,8 @@ else
     i = i-1;
 end % if loop
 
-save(outfile);
-funout = outfile;%load(outfile);
+save(inoutfile);
+funout = inoutfile;%load(outfile);
 
 end % while loop
 

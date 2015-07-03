@@ -65,7 +65,7 @@ for i = FOVset
 end
 
 % Import data for fstatus, final status of cells
-if exist('final_state.mat')==2
+if exist('final_state.mat','file')==2
     load('final_state.mat');
     fstatus = reshape(fstatus,1,(size(fstatus,1).*size(fstatus,2)));
 else

@@ -1,24 +1,25 @@
 function funout = FOVfixer(outfold,FOV,varargin)
 % Allows user to modify the automatically-selected cell division points
 
+loadpath = [pwd,'/'];
+
 if nargin >2
     tpmx = varargin{1};
     tpidx = nan(1,tpmx); % blank time period index
     tptm = tpidx; % blank time period times
     for j = 1:tpmx
-        filename = [pwd,'/timestamp/','tp',num2str(j),'-fov',num2str(FOV-1), '.txt'];
+        tfilename = ['tp',num2str(j),'-fov',num2str(FOV-1), '.txt'];
         %tstmp = cell2mat(textscan(fopen(filename),'%f%f'));
-        tstmp = load(filename);
+        tstmp = load([loadpath,'timestamp/',tfilename]);
         tpidx(j) = tstmp(end,1);
         tptm(j) = tstmp(end,2);
     end
 end
 
-loadpath = [pwd,'/'];
 fate = load([loadpath,'summary/final_state.txt']);
 celfat = fate(FOV,:);
-inoutfile = [loadpath,outfold,'/','FOV_',num2str(FOV)];
-load(inoutfile);
+outfile = [loadpath,outfold,'/','FOV_',num2str(FOV)];
+load(outfile);
 mpkd = 40; % minimum peak distance index separation (~80 minutes)
 rfin = (mpkd.*2)./60; % minimum division interval time in hours (80 minutes)
 dvrw = size(dvtm,1);%round(max(max(t))./rfin); % rows of matrix for recording divisions
@@ -48,10 +49,12 @@ rectangle('Position',[boxx-boxw,boxy-boxh-boxh,boxw,boxh])
 text(boxx-boxw/1.5,boxy-boxh-boxh/2,'Add')
 rectangle('Position',[boxx-boxw-boxw,boxy-boxh-boxh,boxw,boxh])
 text(boxx-boxw-boxw/1.5,boxy-boxh-boxh/2,'Del')
-text(boxx-(4*boxw),boxy-boxh-boxh/2,['Fate: ',num2str(celfat(i))])
+rectangle('Position',[boxx-boxw,boxy-boxh-boxh-boxh,boxw,boxh])
+text(boxx-boxw/1.1,boxy-boxh-boxh-boxh/2,['Fate: ',num2str(celfat(i))])
+%text(boxx-(4*boxw),boxy-boxh-boxh/2,['Fate: ',num2str(celfat(i))])
 
 [PNx,PNy] = ginput(1);
-if ((PNx>(boxx-boxw))&&(PNy>(boxy-boxh)))
+if ((PNx>(boxx-boxw))&&(PNy>(boxy-boxh))) % Advances to the next cell
     i = i+1;
 elseif ((PNx>(boxx-boxw))&&(PNy<(boxy-boxh))&&(PNy>(boxy-boxh-boxh))) %ADD
     dloc1 = dvlc(:,i);
@@ -91,12 +94,18 @@ elseif ((PNx<(boxx-boxw))&&(PNy<(boxy-boxh))&&(PNx>(boxx-boxw-boxw))) %REMOVE
     dvtm(1:ndv(i),i) = t(dloc1,i); % updated division times
     dvln(1:ndv(i),i) = d(dloc1,i); % updated division lengths
     dvlc(1:ndv(i),i) = dloc1; % updated division indices
+elseif ((PNx>(boxx-boxw))&&(PNy<(boxy-boxh-boxh))&&(PNy>(boxy-boxh-boxh-boxh))) %FATE
+    if celfat(i)==2
+        celfat(i) = -1;
+    else
+        celfat(i) = celfat(i)+1;
+    end
 else
     i = i-1;
 end % if loop
 
-save(inoutfile);
-funout = inoutfile;%load(outfile);
+save(outfile);
+funout = outfile;%load(outfile);
 
 end % while loop
 

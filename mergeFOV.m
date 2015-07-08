@@ -45,6 +45,7 @@ t = [];                 % raw time data
 fli = [];               % fluorescence channel means
 ar = [];                % fluorescence areas (px^2)
 statind = [];           % index for status used to pick cells in fstatus
+fstatus = [];           % final status of cells
 for i = FOVset
     %display(i)
     infile = ['FOV_',num2str(i)];
@@ -60,19 +61,21 @@ for i = FOVset
     ar = [ar,a.ar];              % fluorescence areas (px^2)
     %outfile = [outfile,'_',num2str(i)];
     CTper = a.CTper;
+    fstatus = [fstatus,a.celfat];
     clear a
     statind = [statind, (i-1)*CTper+(1:CTper)];
+
 end
 
-% Import data for fstatus, final status of cells
-if exist('final_state.mat','file')==2
-    load('final_state.mat');
-    fstatus = reshape(fstatus,1,(size(fstatus,1).*size(fstatus,2)));
-else
-    N = max(FOVset).*CTper; % number of possible statuses
-    fstatus = cell2mat(textscan(fopen('final_state.txt'),'%f',N))';
-    fstatus = fstatus(statind); % fstatus of cells in merged FOVs only
-end
+% % Import data for fstatus, final status of cells
+% if exist('final_state.mat','file')==2
+%     load('final_state.mat');
+%     fstatus = reshape(fstatus,1,(size(fstatus,1).*size(fstatus,2)));
+% else
+%     N = max(FOVset).*CTper; % number of possible statuses
+%     fstatus = cell2mat(textscan(fopen('final_state.txt'),'%f',N))';
+%     fstatus = fstatus(statind); % fstatus of cells in merged FOVs only
+% end
 
 % Purge unwanted variables
 clear('N','statind','i','infile')

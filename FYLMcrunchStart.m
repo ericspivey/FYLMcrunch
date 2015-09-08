@@ -68,7 +68,7 @@ for di = 1:CTper % Cleanup of raw data
         if isnan(d(dj,di))
             d(dj,di)= d(dj-1,di); % fills in NaN values in distance with the last known distance for all catch channel
             if fluorescence>0
-                fli(dj,di)= fli(dj-1,di);
+                %fli(dj,di)= fli(dj-1,di);
             end
 
         end

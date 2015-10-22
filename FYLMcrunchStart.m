@@ -42,7 +42,7 @@ fylm = load(filename);
     d(:,ct) = fylm(:,2);    % pixel length of cell in each frame
     if fluorescence>0       
         fli(:,fct(ct):(fct(ct)-1+fluorescence)) = fylm(:,3:5:end); % normalized fluorescence intensity in each frame, by fluorophore
-        ar(:,ct) = fylm(:,8);
+        ar(:,ct) = fylm(:,6);
     end
 end
 

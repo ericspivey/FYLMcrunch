@@ -20,8 +20,6 @@ fate = load([loadpath,'summary/final_state.txt']);
 celfat = fate(FOV,:);
 inoutfile = [loadpath,outfold,'/','FOV_',num2str(FOV)];
 load(inoutfile);
-mpkd = 40; % minimum peak distance index separation (~80 minutes)
-rfin = (mpkd.*2)./60; % minimum division interval time in hours (80 minutes)
 dvrw = size(dvtm,1);%round(max(max(t))./rfin); % rows of matrix for recording divisions
 i = 1;
 while ((i>0)&&(i<29))

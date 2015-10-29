@@ -22,7 +22,8 @@ inoutfile = [loadpath,outfold,'/','FOV_',num2str(FOV)];
 load(inoutfile);
 dvrw = size(dvtm,1);%round(max(max(t))./rfin); % rows of matrix for recording divisions
 i = 1;
-while ((i>0)&&(i<29))
+
+while ((i>0)&&(i<=CTper))
 %plot(t(:,i),d(:,i),'ok',dvtm(:,i),dvln(:,i),'r.',t(:,i),fli(:,2.*(i-1)+1).*500,'y',t(:,i),fli(:,2.*(i)).*500,'m')
 %plot(t(:,i),d(:,i),'ok',dvtm(:,i),dvln(:,i),'r.')
 plot(t(:,i),d(:,i),'ok')
@@ -53,7 +54,6 @@ rectangle('Position',[boxx-boxw-boxw,boxy-boxh-boxh,boxw,boxh])
 text(boxx-boxw-boxw/1.5,boxy-boxh-boxh/2,'Del')
 rectangle('Position',[boxx-boxw,boxy-boxh-boxh-boxh,boxw,boxh])
 text(boxx-boxw/1.1,boxy-boxh-boxh-boxh/2,['Fate: ',num2str(celfat(i))])
-%text(boxx-(4*boxw),boxy-boxh-boxh/2,['Fate: ',num2str(celfat(i))])
 
 [PNx,PNy] = ginput(1);
 if ((PNx>(boxx-boxw))&&(PNy>(boxy-boxh))) % Advances to the next cell
@@ -78,7 +78,7 @@ elseif ((PNx>(boxx-boxw))&&(PNy<(boxy-boxh))&&(PNy>(boxy-boxh-boxh))) %ADD
     dvtm(1:ndv(i),i) = t(dloc1,i); % updated division times
     dvln(1:ndv(i),i) = d(dloc1,i); % updated division lengths
     dvlc(1:ndv(i),i) = dloc1; % updated division indices
-%    beep
+
 elseif ((PNx<(boxx-boxw))&&(PNy<(boxy-boxh))&&(PNx>(boxx-boxw-boxw))) %REMOVE
     dloc1 = dvlc(:,i);
     text(boxx-boxw-boxw-boxw-boxw,boxy-boxh-boxh-boxh,'click to remove, "Enter" to continue')
@@ -107,12 +107,9 @@ else
 end % if loop
 
 save(inoutfile);
-funout = inoutfile;%load(outfile);
+funout = inoutfile;
 
 end % while loop
-
-% save(outfile);
-% funout = outfile;%load(outfile);
 
 end % function
 

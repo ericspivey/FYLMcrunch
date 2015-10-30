@@ -31,6 +31,8 @@ if fluorescence>0
 else
     fli = [];
     ar = [];
+    fmed = [];
+    fstd = [];
 end
 
 for ct = 1:CTper
@@ -41,8 +43,10 @@ fylm = load(filename);
     t(:,ct) = fylm(:,1);    % time of each frame
     d(:,ct) = fylm(:,2);    % pixel length of cell in each frame
     if fluorescence>0       
-        fli(:,fct(ct):(fct(ct)-1+fluorescence)) = fylm(:,3:5:end); % normalized fluorescence intensity in each frame, by fluorophore
-        ar(:,ct) = fylm(:,6);
+        fli(:,fct(ct):(fct(ct)-1+fluorescence)) = fylm(:,3:5:end); % mean (normalized) fluorescence intensity in each frame, by fluorophore
+        fstd(:,fct(ct):(fct(ct)-1+fluorescence)) = fylm(:,4:5:end); % standard deviation of fluorescence intensity
+        fmed(:,fct(ct):(fct(ct)-1+fluorescence)) = fylm(:,5:5:end); % median fluorescence intensity
+        ar(:,ct) = fylm(:,6); % area in pixels from which fluorescence data is acquired
     end
 end
 
